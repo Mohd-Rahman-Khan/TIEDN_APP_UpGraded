@@ -1,0 +1,1 @@
+/Users/mohdrahmankhan/Documents/React_Native/TIEDN/TIEDN_IndianExpress/android/app/build/intermediates/cxx/RelWithDebInfo/695w6r4p/obj/armeabi-v7a

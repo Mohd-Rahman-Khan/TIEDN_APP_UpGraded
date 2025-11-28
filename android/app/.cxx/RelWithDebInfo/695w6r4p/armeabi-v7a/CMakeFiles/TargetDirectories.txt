@@ -1,0 +1,3 @@
+/Users/mohdrahmankhan/Documents/React_Native/TIEDN/TIEDN_IndianExpress/android/app/.cxx/RelWithDebInfo/695w6r4p/armeabi-v7a/CMakeFiles/appmodules.dir
+/Users/mohdrahmankhan/Documents/React_Native/TIEDN/TIEDN_IndianExpress/android/app/.cxx/RelWithDebInfo/695w6r4p/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/mohdrahmankhan/Documents/React_Native/TIEDN/TIEDN_IndianExpress/android/app/.cxx/RelWithDebInfo/695w6r4p/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,83 @@
+# # Resolve react_native_pods.rb with node to allow for hoisting
+# require Pod::Executable.execute_command('node', ['-p',
+#   'require.resolve(
+#     "react-native/scripts/react_native_pods.rb",
+#     {paths: [process.argv[1]]},
+#   )', __dir__]).strip
+
+# platform :ios, min_ios_version_supported
+# prepare_react_native_project!
+
+# # --- IMPORTANT: Use dynamic frameworks (required by Firebase 12.x) ---
+# use_frameworks!
+# # -------------------------------------------------------------------
+
+# target 'TIEDN_IndianExpress' do
+#   config = use_native_modules!
+
+#   # React Native setup
+#   use_react_native!(
+#     :path => config[:reactNativePath],
+#     :app_path => "#{Pod::Config.instance.installation_root}/.."
+#   )
+
+
+
+#   # Firebase (NO modular headers needed)
+#   pod 'Firebase/Messaging', '12.4.0'
+#   pod 'Firebase/Analytics', '12.4.0'
+#   pod 'Firebase/Core', '12.4.0'
+
+#   post_install do |installer|
+#     react_native_post_install(installer, config[:reactNativePath])
+#   end
+# end
+
+
+# --- REQUIRED: Generic node_require for auto-resolving scripts ---
+def node_require(script)
+  require Pod::Executable.execute_command('node', ['-p',
+    "require.resolve('#{script}')",
+  ], __dir__).strip
+end
+
+node_require('react-native/scripts/react_native_pods.rb')
+node_require('react-native-permissions/scripts/setup.rb')
+# ----------------------------------------------------------------
+
+platform :ios, min_ios_version_supported
+prepare_react_native_project!
+
+# --- Firebase 12.x requires dynamic frameworks ---
+use_frameworks!
+# -------------------------------------------------
+
+# ---- react-native-permissions v5.4.4 Setup ----
+# Add only the permissions YOUR APP uses:
+setup_permissions([
+  'Camera',
+  'PhotoLibrary',
+  'Microphone',
+  'LocationWhenInUse',
+  'Notifications'
+])
+# -------------------------------------------------
+
+target 'TIEDN_IndianExpress' do
+  config = use_native_modules!
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+
+  # ---- Firebase (all pinned to 12.4.0) ----
+  pod 'Firebase/Messaging', '12.4.0'
+  pod 'Firebase/Analytics', '12.4.0'
+  pod 'Firebase/Core', '12.4.0'
+  # -----------------------------------------
+
+  post_install do |installer|
+    react_native_post_install(installer, config[:reactNativePath])
+  end
+end
