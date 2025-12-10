@@ -1,0 +1,1 @@
+/Users/mohdrahmankhan/Documents/React_Native/TIEDN/TIEDN_IndianExpress_App/android/app/build/intermediates/cxx/RelWithDebInfo/1s6d1m3l/obj/x86_64
