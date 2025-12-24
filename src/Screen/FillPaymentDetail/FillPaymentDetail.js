@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,29 +12,34 @@ import {
   Pressable,
   Platform,
   ActivityIndicator,
-} from 'react-native';
-import styles from './styles';
-import images from '../../Image';
-import moment from 'moment';
-import auth from '../../api/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import COLORS from '../../GlobalConstants/COLORS';
-import {RNCamera} from 'react-native-camera';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+} from "react-native";
+import styles from "./styles";
+import images from "../../Image";
+import moment from "moment";
+import auth from "../../api/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import COLORS from "../../GlobalConstants/COLORS";
+import { RNCamera } from "react-native-camera";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 
-import _ from 'lodash';
-import {getFileExtension, openCamera, uploadDoc} from '../../GlobalUtils/utils';
+import _ from "lodash";
+import {
+  getFileExtension,
+  openCamera,
+  uploadDoc,
+} from "../../GlobalUtils/utils";
+import client from "../../api/client";
 
-const TODAY_DATE = moment().format('YYYY-MM-DD');
+const TODAY_DATE = moment().format("YYYY-MM-DD");
 
-const FillPaymentDetail = ({navigation, route}) => {
-  const [checkNumber, setcheckNumber] = useState('');
-  const [fullName, setfullName] = useState('');
-  const [accountNumber, setaccountNumber] = useState('');
-  const [bankName, setbankName] = useState('');
-  const [ifscCode, setifscCode] = useState('');
-  const [imagePath, setimagePath] = useState('Upload');
-  const [selectedImage, setselectedImage] = useState('');
+const FillPaymentDetail = ({ navigation, route }) => {
+  const [checkNumber, setcheckNumber] = useState("");
+  const [fullName, setfullName] = useState("");
+  const [accountNumber, setaccountNumber] = useState("");
+  const [bankName, setbankName] = useState("");
+  const [ifscCode, setifscCode] = useState("");
+  const [imagePath, setimagePath] = useState("Upload");
+  const [selectedImage, setselectedImage] = useState("");
   const [userData, setUserData] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -45,17 +50,17 @@ const FillPaymentDetail = ({navigation, route}) => {
   }, []);
 
   const getUserDetails = async () => {
-    const userData1 = await AsyncStorage.getItem('InExUserDetails');
+    const userData1 = await AsyncStorage.getItem("InExUserDetails");
     const userData = JSON.parse(userData1);
     setUserData(userData);
   };
 
   const onChangeTextValue = (text, type) => {
     //setAmountColl(text);
-    if (type == 'checkNumber') {
+    if (type == "checkNumber") {
       setcheckNumber(text);
     }
-    if (type == 'fullName') {
+    if (type == "fullName") {
       //setfullName(text);
       if (text) {
         let checkName = /^[A-Za-z\s]+$/.test(text);
@@ -63,23 +68,23 @@ const FillPaymentDetail = ({navigation, route}) => {
           setfullName(text);
         } else {
           Alert.alert(
-            'Oops',
-            'Please enter a valid name.',
-            [{text: 'OK', onPress: async () => {}}],
-            {cancelable: false},
+            "Oops",
+            "Please enter a valid name.",
+            [{ text: "OK", onPress: async () => {} }],
+            { cancelable: false }
           );
         }
       } else {
         setfullName(text);
       }
     }
-    if (type == 'accountNumber') {
+    if (type == "accountNumber") {
       setaccountNumber(text);
     }
-    if (type == 'bankName') {
+    if (type == "bankName") {
       setbankName(text);
     }
-    if (type == 'ifscCode') {
+    if (type == "ifscCode") {
       setifscCode(text);
     }
   };
@@ -89,8 +94,8 @@ const FillPaymentDetail = ({navigation, route}) => {
     value = 0,
     enableFlag,
     type,
-    keyboardType = 'default',
-    maxLength,
+    keyboardType = "default",
+    maxLength
   ) => {
     return (
       <View style={styles.Supply}>
@@ -101,15 +106,16 @@ const FillPaymentDetail = ({navigation, route}) => {
             style={styles.Supplybox}
             value={value} //{type == 2 ? unsoldVal : returnVal}
             keyboardType={keyboardType}
-            onChangeText={text => onChangeTextValue(text, type)}
+            onChangeText={(text) => onChangeTextValue(text, type)}
             maxLength={maxLength}
           />
         ) : (
           <Text
             style={[
               styles.Supplybox,
-              {backgroundColor: 'lightgrey', paddingTop: 12, color: 'black'},
-            ]}>
+              { backgroundColor: "lightgrey", paddingTop: 12, color: "black" },
+            ]}
+          >
             {value}
           </Text>
         )}
@@ -121,9 +127,7 @@ const FillPaymentDetail = ({navigation, route}) => {
     const result = await launchCamera();
 
     setimagePath(
-      result?.assets[0]?.fileName
-        ? result?.assets[0]?.fileName
-        : result[0]?.uri,
+      result?.assets[0]?.fileName ? result?.assets[0]?.fileName : result[0]?.uri
     );
     setselectedImage(result);
   };
@@ -137,138 +141,265 @@ const FillPaymentDetail = ({navigation, route}) => {
       console.log(res);
 
       if (
-        getFIleType == 'png' ||
-        getFIleType == 'PNG' ||
-        getFIleType == 'jpg' ||
-        getFIleType == 'JPG' ||
-        getFIleType == 'jpeg' ||
-        getFIleType == 'JPEG'
+        getFIleType == "png" ||
+        getFIleType == "PNG" ||
+        getFIleType == "jpg" ||
+        getFIleType == "JPG" ||
+        getFIleType == "jpeg" ||
+        getFIleType == "JPEG"
       ) {
         setimagePath(res?.assets[0]?.uri);
         setselectedImage(res?.assets[0]);
       } else {
-        alert('Only jpg or png file are allowed.');
+        alert("Only jpg or png file are allowed.");
       }
     } catch (error) {}
   };
 
   const submitAction = async () => {
     if (checkNumber && bankName && fullName && selectedImage) {
+      // setLoading(true);
+      // const token = await AsyncStorage.getItem("InExToken");
+      // const formData = new FormData();
+
+      // let userId = userData.id;
+      // let executiveId;
+
+      // if (
+      //   userData?.role == "Parcel Vendor" ||
+      //   userData?.role == "Depot Salesman"
+      // ) {
+      //   userId = userData.id;
+      //   executiveId = 0;
+      // } else {
+      //   userId = paramsData.depotItem?.user_id;
+      //   executiveId = await AsyncStorage.getItem("InExUserId");
+      // }
+
+      // formData.append("user_id", userId);
+      // formData.append("executive_id", executiveId);
+      // formData.append("payment_mode", "cheque");
+      // formData.append("amount_collected", route.params.amount);
+      // formData.append("outstanding", route.params.outstandingData.outstanding);
+      // formData.append("updated_by_last_user_id", userId);
+      // formData.append("cheque_number", checkNumber);
+      // formData.append("cheque_issue_date", TODAY_DATE);
+      // formData.append("cheque_account_number", accountNumber);
+      // formData.append("cheque_micr_code", "cheque_micr_code");
+      // formData.append("name", fullName);
+      // formData.append("ifsc", ifscCode);
+      // formData.append("bill_till_date", TODAY_DATE);
+      // formData.append("ship_to_code", paramsData.depotItem.ship_to_code);
+      // formData.append("bill_to_code", paramsData.outstandingData.bill_to_code);
+      // formData.append("role", userData?.role);
+      // formData.append("cheque_bank_name", bankName);
+
+      // if (Platform.OS == "ios") {
+      //   formData.append("file", {
+      //     uri: selectedImage.uri,
+      //     name: selectedImage.name
+      //       ? selectedImage.name
+      //       : selectedImage.fileName,
+      //     type: selectedImage.type,
+      //   });
+      // } else {
+      //   if (selectedImage?.assets) {
+      //     formData.append("file", {
+      //       uri: selectedImage.assets[0].uri,
+      //       name: selectedImage.assets[0].fileName,
+      //       type: selectedImage.assets[0].type,
+      //     });
+      //   } else {
+      //     formData.append("file", {
+      //       uri: selectedImage.uri,
+      //       name: selectedImage.name
+      //         ? selectedImage.name
+      //         : selectedImage.fileName,
+      //       type: selectedImage.type,
+      //     });
+      //   }
+      // }
+
+      // const response = await auth.paymentTransanction(formData, token);
+      // setLoading(false);
+
+      // if (response?.data?.code == 201 || response?.data?.code == 200) {
+      //   //alert('Payment added successfully.');
+      //   Alert.alert(
+      //     "Success",
+      //     "Payment added successfully.",
+      //     [
+      //       {
+      //         text: "OK",
+      //         onPress: async () => {
+      //           navigation.navigate("CollectionList");
+      //         },
+      //       },
+      //     ],
+      //     { cancelable: false }
+      //   );
+      //   //navigation.navigate('Home');
+      // } else if (response?.data?.message) {
+      //   if (
+      //     response?.data?.message == "The operation/error failed/occurred. "
+      //   ) {
+      //     Alert.alert(
+      //       "Oops",
+      //       "This cheque number is already paid.",
+      //       [{ text: "OK", onPress: async () => {} }],
+      //       { cancelable: false }
+      //     );
+      //   } else {
+      //     Alert.alert(
+      //       "Oops",
+      //       response?.data?.message,
+      //       [{ text: "OK", onPress: async () => {} }],
+      //       { cancelable: false }
+      //     );
+      //   }
+      // } else {
+      //   alert(response?.problem);
+      //   Alert.alert(
+      //     "Oops",
+      //     response?.problem,
+      //     [{ text: "OK", onPress: async () => {} }],
+      //     { cancelable: false }
+      //   );
+      // }
+
       setLoading(true);
-      const token = await AsyncStorage.getItem('InExToken');
+      const token = await AsyncStorage.getItem("InExToken");
       const formData = new FormData();
 
       let userId = userData.id;
       let executiveId;
 
       if (
-        userData?.role == 'Parcel Vendor' ||
-        userData?.role == 'Depot Salesman'
+        userData?.role == "Parcel Vendor" ||
+        userData?.role == "Depot Salesman"
       ) {
         userId = userData.id;
         executiveId = 0;
       } else {
         userId = paramsData.depotItem?.user_id;
-        executiveId = await AsyncStorage.getItem('InExUserId');
+        executiveId = await AsyncStorage.getItem("InExUserId");
       }
 
-      formData.append('user_id', userId);
-      formData.append('executive_id', executiveId);
-      formData.append('payment_mode', 'cheque');
-      formData.append('amount_collected', route.params.amount);
-      formData.append('outstanding', route.params.outstandingData.outstanding);
-      formData.append('updated_by_last_user_id', userId);
-      formData.append('cheque_number', checkNumber);
-      formData.append('cheque_issue_date', TODAY_DATE);
-      formData.append('cheque_account_number', accountNumber);
-      formData.append('cheque_micr_code', 'cheque_micr_code');
-      formData.append('name', fullName);
-      formData.append('ifsc', ifscCode);
-      formData.append('bill_till_date', TODAY_DATE);
-      formData.append('ship_to_code', paramsData.depotItem.ship_to_code);
-      formData.append('bill_to_code', paramsData.outstandingData.bill_to_code);
-      formData.append('role', userData?.role);
-      formData.append('cheque_bank_name', bankName);
+      try {
+        formData.append("user_id", userId);
+        formData.append("executive_id", executiveId);
+        formData.append("payment_mode", "cheque");
+        formData.append("amount_collected", route.params.amount);
+        formData.append(
+          "outstanding",
+          route.params.outstandingData.outstanding
+        );
+        formData.append("updated_by_last_user_id", userId);
+        formData.append("cheque_number", checkNumber);
+        formData.append("cheque_issue_date", TODAY_DATE);
+        formData.append("cheque_account_number", accountNumber);
+        formData.append("cheque_micr_code", "cheque_micr_code");
+        formData.append("name", fullName);
+        formData.append("ifsc", ifscCode);
+        formData.append("bill_till_date", TODAY_DATE);
+        formData.append("ship_to_code", paramsData.depotItem.ship_to_code);
+        formData.append(
+          "bill_to_code",
+          paramsData.outstandingData.bill_to_code
+        );
+        formData.append("role", userData?.role);
+        formData.append("cheque_bank_name", bankName);
 
-      if (Platform.OS == 'ios') {
-        formData.append('file', {
-          uri: selectedImage.uri,
-          name: selectedImage.name
-            ? selectedImage.name
-            : selectedImage.fileName,
-          type: selectedImage.type,
-        });
-      } else {
-        if (selectedImage?.assets) {
-          formData.append('file', {
-            uri: selectedImage.assets[0].uri,
-            name: selectedImage.assets[0].fileName,
-            type: selectedImage.assets[0].type,
-          });
-        } else {
-          formData.append('file', {
+        if (Platform.OS == "ios") {
+          formData.append("file", {
             uri: selectedImage.uri,
             name: selectedImage.name
               ? selectedImage.name
               : selectedImage.fileName,
             type: selectedImage.type,
           });
+        } else {
+          if (selectedImage?.assets) {
+            formData.append("file", {
+              uri: selectedImage.assets[0].uri,
+              name: selectedImage.assets[0].fileName,
+              type: selectedImage.assets[0].type,
+            });
+          } else {
+            formData.append("file", {
+              uri: selectedImage.uri,
+              name: selectedImage.name
+                ? selectedImage.name
+                : selectedImage.fileName,
+              type: selectedImage.type,
+            });
+          }
         }
-      }
+        const API_URL = client.BASE_URL + "/transaction/cheque-collection";
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            Accept: "application/vnd.tiedn.ie.api.v1+json",
+            Authorization: "Bearer " + token,
+          },
+          body: formData,
+        });
 
-      const response = await auth.paymentTransanction(formData, token);
-      setLoading(false);
+        const result = await response.json();
 
-      if (response?.data?.code == 201 || response?.data?.code == 200) {
-        //alert('Payment added successfully.');
-        Alert.alert(
-          'Success',
-          'Payment added successfully.',
-          [
-            {
-              text: 'OK',
-              onPress: async () => {
-                navigation.navigate('CollectionList');
-              },
-            },
-          ],
-          {cancelable: false},
-        );
-        //navigation.navigate('Home');
-      } else if (response?.data?.message) {
-        if (
-          response?.data?.message == 'The operation/error failed/occurred. '
-        ) {
+        setLoading(false);
+
+        console.log("SUCCESS:", result);
+        if (result?.code == 201 || result?.code == 200) {
           Alert.alert(
-            'Oops',
-            'This cheque number is already paid.',
-            [{text: 'OK', onPress: async () => {}}],
-            {cancelable: false},
+            "Success",
+            "Payment added successfully.",
+            [
+              {
+                text: "OK",
+                onPress: async () => {
+                  setTimeout(() => {
+                    navigation.navigate("CollectionList");
+                  }, 1000);
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+          setLoading(false);
+          //navigation.navigate('Home');
+        } else if (result?.message) {
+          Alert.alert(
+            "Oops",
+            result?.message,
+            [{ text: "OK", onPress: async () => {} }],
+            { cancelable: false }
           );
         } else {
           Alert.alert(
-            'Oops',
-            response?.data?.message,
-            [{text: 'OK', onPress: async () => {}}],
-            {cancelable: false},
+            "Oops",
+            result?.problem || "Network error",
+            [{ text: "OK", onPress: async () => {} }],
+            { cancelable: false }
           );
         }
-      } else {
-        alert(response?.problem);
+      } catch (error) {
+        setLoading(false);
+        console.log("ERROR:", error.response?.data || error.message);
         Alert.alert(
-          'Oops',
-          response?.problem,
-          [{text: 'OK', onPress: async () => {}}],
-          {cancelable: false},
+          "Oops",
+          error.response?.data || error.message,
+          [{ text: "OK", onPress: async () => {} }],
+          { cancelable: false }
         );
       }
     } else {
-      alert('Please add cheque details.');
+      alert("Please add cheque details.");
       Alert.alert(
-        'Oops',
-        'Please add cheque details.',
-        [{text: 'OK', onPress: async () => {}}],
-        {cancelable: false},
+        "Oops",
+        "Please add cheque details.",
+        [{ text: "OK", onPress: async () => {} }],
+        { cancelable: false }
       );
     }
   };
@@ -277,19 +408,19 @@ const FillPaymentDetail = ({navigation, route}) => {
       <ScrollView>
         <View style={styles.container}>
           {rowItemView(
-            'Amount Paid In Rs.',
+            "Amount Paid In Rs.",
             route.params.amount,
             false,
-            'amout',
+            "amout"
           )}
-          {rowItemView('Full Name', fullName, true, 'fullName')}
+          {rowItemView("Full Name", fullName, true, "fullName")}
           {rowItemView(
-            'Cheque Number',
+            "Cheque Number",
             checkNumber,
             true,
-            'checkNumber',
-            'numeric',
-            6,
+            "checkNumber",
+            "numeric",
+            6
           )}
           {/* {rowItemView(
             'Account Number',
@@ -298,10 +429,12 @@ const FillPaymentDetail = ({navigation, route}) => {
             'accountNumber',
             'numeric',
           )} */}
-          {rowItemView('Bank Name', bankName, true, 'bankName')}
+          {rowItemView("Bank Name", bankName, true, "bankName")}
           {/* {rowItemView('IFSC', ifscCode, true, 'ifscCode')} */}
 
-          <Text style={[styles.fromtext, {marginTop: 10}]}>Upload Cheque</Text>
+          <Text style={[styles.fromtext, { marginTop: 10 }]}>
+            Upload Cheque
+          </Text>
 
           <View style={styles.rowContainer}>
             <View style={styles.uploadDocContainer}>
@@ -312,7 +445,8 @@ const FillPaymentDetail = ({navigation, route}) => {
               <View style={styles.uploadDocButtonContainer}>
                 <TouchableOpacity
                   onPress={_openGallery}
-                  style={styles.openGalleryButtonConatiner}>
+                  style={styles.openGalleryButtonConatiner}
+                >
                   <View style={styles.uploadIconContainer}>
                     <Image
                       style={styles.uploadIconStyle}
@@ -328,7 +462,8 @@ const FillPaymentDetail = ({navigation, route}) => {
                 </View>
                 <TouchableOpacity
                   onPress={_openCamera}
-                  style={styles.openCameraButtonConatiner}>
+                  style={styles.openCameraButtonConatiner}
+                >
                   <View style={styles.cameraContainer}>
                     <Image
                       source={images.cameraIcon}
@@ -340,11 +475,11 @@ const FillPaymentDetail = ({navigation, route}) => {
             </View>
           </View>
 
-          <View style={{marginTop: 20}}>
+          <View style={{ marginTop: 20 }}>
             <Image
               source={{
                 uri:
-                  Platform.OS == 'android'
+                  Platform.OS == "android"
                     ? selectedImage?.assets
                       ? selectedImage.assets[0].uri
                       : selectedImage.uri
@@ -352,28 +487,30 @@ const FillPaymentDetail = ({navigation, route}) => {
                 //Platform.OS=="ios"?selectedImage.uri:Platform.OS=="android"?selectedImage?.assets?selectedImage.assets[0].uri:selectedImage.uri
               }}
               resizeMode="contain"
-              style={{height: 50, width: '100%'}}
+              style={{ height: 50, width: "100%" }}
             />
           </View>
           <View
             style={{
               marginVertical: 20,
-              justifyContent: 'center',
-              alignItems: 'center',
+              justifyContent: "center",
+              alignItems: "center",
               marginTop: 40,
-            }}>
+            }}
+          >
             {loading ? (
-              <TouchableOpacity disabled style={{width: '70%'}}>
+              <TouchableOpacity disabled style={{ width: "70%" }}>
                 <View style={[styles.canclebtn]}>
-                  <ActivityIndicator size="small" color={'red'} />
+                  <ActivityIndicator size="small" color={"red"} />
                 </View>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                style={{width: '70%'}}
+                style={{ width: "70%" }}
                 onPress={() => {
                   submitAction();
-                }}>
+                }}
+              >
                 <View style={[styles.canclebtn]}>
                   <Text style={styles.canclebtntext}>SUBMIT</Text>
                 </View>
