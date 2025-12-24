@@ -1,6 +1,6 @@
 import { create } from "apisauce";
-//const BASE_URL = 'https://dms.expressindia.com/api'; // prod url
-const BASE_URL = "http://143.244.135.31:8080"; // uat url
+const BASE_URL = "https://dms.expressindia.com/api"; // prod url
+//const BASE_URL = "http://143.244.135.31:8080"; // uat url
 //const BASE_URL = "http://192.168.60.65:8080"; // dev ur
 //const BASE_URL = "http://192.168.80.56:8080"; // dev ur
 const POST_ACCEPT = "application/vnd.tiedn.ie.api.v1+json";
