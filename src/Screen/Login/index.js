@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   ActivityIndicator,
   View,
@@ -9,29 +9,30 @@ import {
   Alert,
   ScrollView,
   PermissionsAndroid,
-} from 'react-native';
-import images from '../../Image';
-import styles from './styles';
-import auth from '../../api/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppLoader from '../../Helper/AppIndicator';
+} from "react-native";
+import images from "../../Image";
+import styles from "./styles";
+import auth from "../../api/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AppLoader from "../../Helper/AppIndicator";
 import {
   getFCMToken,
   requestUserPermission,
-} from '../../PushNotification/NotificationConfig';
-import DeviceInfo from 'react-native-device-info';
+} from "../../PushNotification/NotificationConfig";
+import DeviceInfo from "react-native-device-info";
+import { version } from "../../../package.json";
 
 // import AsyncStorage from '@react-native-community/async-storage';
 
-const Login = ({navigation}) => {
-  const [loginId, setLoginId] = useState('');
-  const [password, setPassword] = useState('');
-  const [deviceToken, setDeviceToken] = useState('');
+const Login = ({ navigation }) => {
+  const [loginId, setLoginId] = useState("");
+  const [password, setPassword] = useState("");
+  const [deviceToken, setDeviceToken] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const passwordRef = useRef();
 
   useEffect(() => {
-    if (Platform.OS == 'android') {
+    if (Platform.OS == "android") {
       requestNotificationPermission();
     }
   }, []);
@@ -39,14 +40,14 @@ const Login = ({navigation}) => {
   const requestNotificationPermission = async () => {
     try {
       const notfPerm = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
       );
     } catch (err) {}
   };
 
   useEffect(() => {
     if (requestUserPermission()) {
-      getFCMToken(token => {
+      getFCMToken((token) => {
         console.log(token);
         setDeviceToken(token);
       });
@@ -55,7 +56,7 @@ const Login = ({navigation}) => {
   }, []);
 
   const authUser = async (loginId, pass) => {
-    const platform = 'mobile';
+    const platform = "mobile";
     if (loginId && pass && platform) {
       setIsLoading(true);
       const deviceId = await DeviceInfo.getUniqueId();
@@ -67,25 +68,25 @@ const Login = ({navigation}) => {
         platform,
         deviceToken,
         deviceId,
-        deviceName,
+        deviceName
       );
 
       if (response?.status != 200) {
         if (response?.status == 406) {
           setIsLoading(false);
           Alert.alert(
-            'Login Error!',
+            "Login Error!",
             response?.data?.error, // <- this part is optional, you can pass an empty string
-            [{text: 'OK', onPress: () => {}}],
-            {cancelable: false},
+            [{ text: "OK", onPress: () => {} }],
+            { cancelable: false }
           );
         } else {
           setIsLoading(false);
           Alert.alert(
-            'Login Error!',
-            response?.data?.error ? response?.data?.error : 'Server Error', // <- this part is optional, you can pass an empty string
-            [{text: 'OK', onPress: () => {}}],
-            {cancelable: false},
+            "Login Error!",
+            response?.data?.error ? response?.data?.error : "Server Error", // <- this part is optional, you can pass an empty string
+            [{ text: "OK", onPress: () => {} }],
+            { cancelable: false }
           );
         }
       } else {
@@ -94,26 +95,26 @@ const Login = ({navigation}) => {
         userDetails.loginId = loginId;
 
         await AsyncStorage.setItem(
-          'InExToken',
-          response?.headers['tiedn-ie-api-authorization'],
+          "InExToken",
+          response?.headers["tiedn-ie-api-authorization"]
         );
         await AsyncStorage.setItem(
-          'InExUserId',
-          JSON.stringify(response?.data?.data?.id),
+          "InExUserId",
+          JSON.stringify(response?.data?.data?.id)
         );
         await AsyncStorage.setItem(
-          'InExUserDetails',
-          JSON.stringify(userDetails),
+          "InExUserDetails",
+          JSON.stringify(userDetails)
         );
         setIsLoading(false);
-        navigation.replace('Home', {
+        navigation.replace("Home", {
           userData: {
             role: result?.role,
           },
         });
       }
     } else {
-      alert('Please provide Login Id and Password.');
+      alert("Please provide Login Id and Password.");
     }
   };
 
@@ -138,9 +139,9 @@ const Login = ({navigation}) => {
           placeholder="Enter Login ID"
           value={loginId}
           style={styles.TextInput}
-          onChangeText={text => setLoginId(text)}
+          onChangeText={(text) => setLoginId(text)}
           onSubmitEditing={() => passwordRef.current?.focus()}
-          returnKeyType={'next'}
+          returnKeyType={"next"}
         />
       </View>
       <View style={styles.passwordstyle}>
@@ -152,15 +153,16 @@ const Login = ({navigation}) => {
           placeholder="Enter Password"
           value={password}
           style={styles.TextInput}
-          onChangeText={text => setPassword(text)}
+          onChangeText={(text) => setPassword(text)}
           secureTextEntry={true}
         />
       </View>
       <View>
         <TouchableOpacity
           disabled={isLoading}
-          style={[styles.loginBtn, {opacity: isLoading ? 0.6 : 1}]}
-          onPress={() => authUser(loginId.trim(), password.trim())}>
+          style={[styles.loginBtn, { opacity: isLoading ? 0.6 : 1 }]}
+          onPress={() => authUser(loginId.trim(), password.trim())}
+        >
           {isLoading ? (
             <ActivityIndicator size="small" color="white" />
           ) : (
@@ -169,98 +171,113 @@ const Login = ({navigation}) => {
         </TouchableOpacity>
         <View
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             marginBottom: 20,
-          }}>
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('ForgetPassword', {
-                type: 'forget',
+              navigation.navigate("ForgetPassword", {
+                type: "forget",
               });
-            }}>
-            <Text style={{color: 'black', fontSize: 16, fontWeight: '700'}}>
+            }}
+          >
+            <Text style={{ color: "black", fontSize: 16, fontWeight: "700" }}>
               Forget Password
             </Text>
           </TouchableOpacity>
         </View>
         <View
           style={{
-            marginBottom: '5%',
+            marginBottom: "5%",
             marginHorizontal: 20,
-          }}>
+          }}
+        >
           <Text
             style={{
               fontSize: 16,
-              color: 'grey',
-              textAlign: 'center',
-            }}>
-            By logging in, you agree to our{' '}
+              color: "grey",
+              textAlign: "center",
+            }}
+          >
+            By logging in, you agree to our{" "}
             <Text
-              onPress={() => navigation.navigate('TermsOfService')}
+              onPress={() => navigation.navigate("TermsOfService")}
               style={{
                 fontSize: 16,
-                color: '#ab64d1',
-                fontWeight: 'bold',
-                textDecorationLine: 'underline',
-              }}>
+                color: "#ab64d1",
+                fontWeight: "bold",
+                textDecorationLine: "underline",
+              }}
+            >
               Terms of Service
-            </Text>{' '}
-            and{' '}
+            </Text>{" "}
+            and{" "}
             <Text
-              onPress={() => navigation.navigate('PrivacyPolicy')}
+              onPress={() => navigation.navigate("PrivacyPolicy")}
               style={{
                 fontSize: 16,
-                color: 'blue',
-                fontWeight: 'bold',
-                textDecorationLine: 'underline',
-                alignSelf: 'flex-end',
-              }}>
+                color: "blue",
+                fontWeight: "bold",
+                textDecorationLine: "underline",
+                alignSelf: "flex-end",
+              }}
+            >
               Privacy Policy
             </Text>
-            {'.'}
+            {"."}
           </Text>
           <View
             style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingTop: '32%',
-            }}>
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingTop: "32%",
+            }}
+          >
             <Text
-              onPress={() => navigation.navigate('AboutUs')}
+              onPress={() => navigation.navigate("AboutUs")}
               style={{
                 fontSize: 14,
-                color: 'grey',
-                fontWeight: '600',
-                textDecorationLine: 'underline',
-                alignSelf: 'flex-end',
-              }}>
+                color: "grey",
+                fontWeight: "600",
+                textDecorationLine: "underline",
+                alignSelf: "flex-end",
+              }}
+            >
               About Us
             </Text>
             <Text
-              onPress={() => navigation.navigate('CancellationPolicy')}
+              onPress={() => navigation.navigate("CancellationPolicy")}
               style={{
                 fontSize: 14,
-                color: 'grey',
-                fontWeight: '600',
-                textDecorationLine: 'underline',
-                alignSelf: 'flex-end',
-              }}>
+                color: "grey",
+                fontWeight: "600",
+                textDecorationLine: "underline",
+                alignSelf: "flex-end",
+              }}
+            >
               Cancellation Policy
             </Text>
             <Text
               onPress={() => {
-                navigation.navigate('ContactUs');
+                navigation.navigate("ContactUs");
               }}
               style={{
                 fontSize: 14,
-                color: 'grey',
-                fontWeight: '600',
-                textDecorationLine: 'underline',
-                alignSelf: 'flex-end',
-              }}>
+                color: "grey",
+                fontWeight: "600",
+                textDecorationLine: "underline",
+                alignSelf: "flex-end",
+              }}
+            >
               Contact Us
+            </Text>
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Text style={{ color: "black", fontSize: 12, textAlign: "center" }}>
+              V - {version}
             </Text>
           </View>
         </View>

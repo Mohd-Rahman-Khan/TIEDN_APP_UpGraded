@@ -1,8 +1,8 @@
 if(NOT TARGET ReactAndroid::hermestooling)
 add_library(ReactAndroid::hermestooling SHARED IMPORTED)
 set_target_properties(ReactAndroid::hermestooling PROPERTIES
-    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/hermestooling/libs/android.arm64-v8a/libhermestooling.so"
-    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/hermestooling/include"
+    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/hermestooling/libs/android.arm64-v8a/libhermestooling.so"
+    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/hermestooling/include"
     INTERFACE_LINK_LIBRARIES ""
 )
 endif()
@@ -10,8 +10,8 @@ endif()
 if(NOT TARGET ReactAndroid::jsctooling)
 add_library(ReactAndroid::jsctooling SHARED IMPORTED)
 set_target_properties(ReactAndroid::jsctooling PROPERTIES
-    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/jsctooling/libs/android.arm64-v8a/libjsctooling.so"
-    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/jsctooling/include"
+    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/jsctooling/libs/android.arm64-v8a/libjsctooling.so"
+    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/jsctooling/include"
     INTERFACE_LINK_LIBRARIES ""
 )
 endif()
@@ -19,8 +19,8 @@ endif()
 if(NOT TARGET ReactAndroid::jsi)
 add_library(ReactAndroid::jsi SHARED IMPORTED)
 set_target_properties(ReactAndroid::jsi PROPERTIES
-    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/jsi/libs/android.arm64-v8a/libjsi.so"
-    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/jsi/include"
+    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/jsi/libs/android.arm64-v8a/libjsi.so"
+    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/jsi/include"
     INTERFACE_LINK_LIBRARIES ""
 )
 endif()
@@ -28,8 +28,8 @@ endif()
 if(NOT TARGET ReactAndroid::reactnative)
 add_library(ReactAndroid::reactnative SHARED IMPORTED)
 set_target_properties(ReactAndroid::reactnative PROPERTIES
-    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/reactnative/libs/android.arm64-v8a/libreactnative.so"
-    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/9f8e25feabbe8b0b7a3e83fbd347083e/transformed/react-android-0.78.0-debug/prefab/modules/reactnative/include"
+    IMPORTED_LOCATION "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/reactnative/libs/android.arm64-v8a/libreactnative.so"
+    INTERFACE_INCLUDE_DIRECTORIES "/Users/mohdrahmankhan/.gradle/caches/8.12/transforms/925f082ab05abd9164a7c51079ec88e2/transformed/react-android-0.78.0-debug/prefab/modules/reactnative/include"
     INTERFACE_LINK_LIBRARIES ""
 )
 endif()

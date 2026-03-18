@@ -1,6 +1,6 @@
-import {Platform} from 'react-native';
-import messaging from '@react-native-firebase/messaging';
-import onDisplayNotification from './displayNotification';
+import { Platform } from "react-native";
+import messaging from "@react-native-firebase/messaging";
+import onDisplayNotification from "./displayNotification";
 
 export const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
@@ -10,10 +10,10 @@ export const requestUserPermission = async () => {
   );
 };
 
-export const getFCMToken = async callback => {
+export const getFCMToken = async (callback) => {
   messaging()
     .getToken()
-    .then(fcmToken => {
+    .then((fcmToken) => {
       //initPushHandler();
       callback(fcmToken);
     });
@@ -22,19 +22,19 @@ export const getFCMToken = async callback => {
 export const initPushHandler = async () => {
   messaging()
     .getInitialNotification()
-    .then(async remoteMessage => {
+    .then(async (remoteMessage) => {
       if (remoteMessage) {
       }
     });
 
-  messaging().onNotificationOpenedApp(async remoteMessage => {
+  messaging().onNotificationOpenedApp(async (remoteMessage) => {
     if (remoteMessage) {
     }
   });
 
-  messaging().setBackgroundMessageHandler(async remoteMessage => {});
+  messaging().setBackgroundMessageHandler(async (remoteMessage) => {});
 
-  messaging().onMessage(async remoteMessage => {
+  messaging().onMessage(async (remoteMessage) => {
     // alert('A new FCM message arrived! ' + remoteMessage.notification.body);
     const message = JSON.stringify(remoteMessage);
 
